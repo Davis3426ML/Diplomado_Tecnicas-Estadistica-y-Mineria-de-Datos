@@ -1,0 +1,22 @@
+Este archive tiene el objetivo de guardar las correciones que tiene en cada una de las tareas y actividades realizadas en este diplomado.
+
+(1) En la tabla de conectividad, respecto en la parte "Empleado:licencia" la conectividad correcta es 1:N
+
+(2) En el diagrama ER falta lo que es una seccion espeficicamente; La entidad "Proyecto" se relaciona directo con la entidad "empleado", no con historial y entonces faltaría una entidad mas entre empleado:proyectos
+
+(3) Ninguno
+
+(4) El video tiene que relacionarse con almacen, de ahí tus datos de que película es.
+
+(5) Ninguno
+
+(6)
+
+(7)
+
+(8)
+
+(9)
+
+(10)
+
