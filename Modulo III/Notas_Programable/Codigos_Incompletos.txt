@@ -1,0 +1,849 @@
+## Intervalo de Confianza para la media de una distribución normal (σ conocida)
+
+Sea $X_1, \dots, X_n$ una m.a. $X_i \sim \mathcal{N}(\mu, \sigma^2)$. Entonces:
+
+- $\bar{X} \sim \mathcal{N}(\mu, \frac{\sigma^2}{n})$
+- $Z = \frac{\bar{X} - \mu}{\sigma / \sqrt{n}} \sim \mathcal{N}(0,1)$
+
+### Nivel de significancia (error): $\alpha$
+
+El intervalo de confianza se basa en que:
+$$
+\mathbb{P}\left( -z_{\alpha/2} < \frac{\bar{X} - \mu}{\sigma / \sqrt{n}} < z_{\alpha/2} \right)
+= \mathbb{P}\left( \bar{X} - z_{\alpha/2} \frac{\sigma}{\sqrt{n}} < \mu < \bar{X} + z_{\alpha/2} \frac{\sigma}{\sqrt{n}} \right)
+= 1 - \alpha
+$$
+
+
+
+
+
+
+### El intervalo del $(1 - \alpha) \cdot 100\%$ de confianza para $\mu$ (con $\sigma$ conocida) es:
+
+$$
+\left( \bar{X} - z_{\alpha/2} \frac{\sigma}{\sqrt{n}}, \quad \bar{X} + z_{\alpha/2} \frac{\sigma}{\sqrt{n}} \right)
+$$
+donde
+
+- $\sigma$ = desviación estándar  
+- $\frac{\sigma}{\sqrt{n}}$ = error estándar de la media  
+- $z_{\alpha/2}$ determina el nivel de confianza  
+- El intervalo está centrado en $\bar{X}$
+
+**Observación**
+
+- A mayor $n$, menor es el error estándar, y el intervalo de confianza es más pequeño.
+- Esto hace que se acerque más a la media $\mu$, es decir, que haya menor variación.
+
+
+
+
+
+
+
+
+
+
+# Puntos para graficar la curva normal
+x = np.linspace(media_muestral - 4*error_estandar, media_muestral + 4*error_estandar, 500)
+y = st.norm.pdf(x, loc=media_muestral, scale=error_estandar)
+
+# Gráfica
+plt.figure(figsize=(10, 5))
+plt.plot(x, y, label='Distribución normal', color='black')
+
+# Sombrear el intervalo de confianza
+plt.fill_between(x, y, where=(x >= intervalo[0]) & (x <= intervalo[1]), color='skyblue', alpha=0.6, label='IC 95%')
+
+# Líneas verticales
+plt.axvline(intervalo[0], color='blue', linestyle='--', label=f'IC inferior = {intervalo[0]:.2f}')
+plt.axvline(intervalo[1], color='blue', linestyle='--', label=f'IC superior = {intervalo[1]:.2f}')
+plt.axvline(media_muestral, color='red', linestyle='-', label=f'Media muestral = {media_muestral}')
+
+# Estética
+plt.title('Intervalo de confianza del 95% para la media ($\\sigma$ conocida)', fontsize=14)
+plt.xlabel('Valor de la variable')
+plt.ylabel('Densidad')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+
+
+
+
+holis_Pro3
+
+
+
+
+
+
+https://github.com/Davis3426ML/Diplomado_Tecnicas-Estadistica-y-Mineria-de-Datos/tree/Mis-Reservas/Modulo%20II/Proyecto
+
+
+
+
+https://github.com/Davis3426ML/Diplomado_Tecnicas-Estadistica-y-Mineria-de-Datos/tree/14689feac4e156f174365445612e7b73a9eb3fac/Modulo%20II/Proyecto
+
+
+
+Buenas tardes, espero que se encuentre bien. Mi pregunta es sobre como puedo entrar este mundo laboral de los datos siendo alguien recien egresado de actuaria o que otra cosa deberia hacer ???
+
+
+
+
+
+
+
+
+
+
+No description has been provided for this image
+2. Estimación 
+β
+0
+ y 
+β
+1
+ en una regresión lineal
+Un modelo de regresión simple lineal:
+
+μ
+Y
+|
+x
+=
+y
+=
+β
+0
++
+β
+1
+x
++
+ϵ
+donde:
+
+y
+ es la variable respuesta (dependiente),
+x
+ es la variable explicativa (independiente),
+β
+0
+ es el intercepto,
+β
+1
+ es el coeficiente de la variable explicativa (pendiente),
+ϵ
+ es el término de error.
+Necesitamos el modulo 'statsmodels.api' para realizar la estimación y validación estadística'
+
+import statsmodels.api as sm
+#  estimación y validación de regersión
+
+# Iniciamos el proceso de estimación de los coeficientes del modelo de regresion simple lineal
+X = pd.DataFrame({'beta0' : np.ones(base3.shape[0]), 'beta1' : base3['Reduc_solidos']})
+#diccionario Lave : valor
+# creamos el término independiente $\beta_0$ agregando una columna de 'unos'
+
+# Definimos la variable de respuesta extrayéndola
+y = base3['Red_deman_oxig%']
+
+
+# opción para sustituir 'X'
+#x_c_intercepto = sm.add_constant(X)
+
+# Especificamos el modelo por usar  StatModels por MCO (Ordinary Least Squares)
+modelo = sm.OLS(y, X)
+
+# Ajustamos el modelo
+resultado = modelo.fit()
+
+# Imprimimos los resultados
+print(resultado.summary())
+Gráfica de cajas de los residuales
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Obtener los residuales del modelo ajustado
+residuales = resultado.resid
+
+# Crear la gráfica de caja
+plt.figure(figsize=(6, 4))
+sns.boxplot(y=residuales)
+plt.title('Gráfica de Caja de los Residuales')
+plt.ylabel('Residuales')
+plt.grid(True)
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+  to  Everyone
+#===================================
+# Importamos los modulos a utilizar
+#===================================
+import numpy as np  ## 'numpy'  para para manejo de arreglos
+import pandas as pd
+#==========================
+# Cargamos la base de datos (Los valores cualitativos ya estan tratados en la base como cuantitativo)
+#==========================
+base3 = pd.read_excel("ContamH2Opeletera393.xlsx")
+base3
+#m_correlación = 
+corSp=base3.corr( method='spearman')
+print(corSp)
+
+#Otra forma
+
+matriz = base3.corr(method='pearson')
+print(matriz)
+
+
+
+
+
+
+
+
+
+san bartolo en bachilleres (santa cruz del monte una cuadra mas)
+
+
+
+
+
+
+
+
+  to  Everyone
+import statsmodels.stats.api as sms
+from statsmodels.compat import lzip
+implementación
+name = ["Jarque-Bera", "Chi^2 two-tail prob.", "Skew", "Kurtosis"]
+test = sms.jarque_bera(resultado.resid)
+lzip(name, test)
+
+Japhet Arellanos  to  Everyone 9:02 PM
+También podría usarse un qqplot, ¿no?
+
+LEONARDO ROMAN OLMEDO GARCIA 9:05 PM
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from scipy.stats import f
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LEONARDO ROMAN OLMEDO GARCIA  to  Everyone 9:01 PM
+import statsmodels.stats.api as sms
+from statsmodels.compat import lzip
+implementación
+name = ["Jarque-Bera", "Chi^2 two-tail prob.", "Skew", "Kurtosis"]
+test = sms.jarque_bera(resultado.resid)
+lzip(name, test)
+
+Japhet Arellanos  to  Everyone 9:02 PM
+También podría usarse un qqplot, ¿no?
+
+LEONARDO ROMAN OLMEDO GARCIA  to  Everyone 9:05 PM
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from scipy.stats import f
+x=base3['Reduc_solidos']
+#X = pd.DataFrame({'beta0' : np.ones(base3.shape[0]), 'beta1' : base3['Reduc_solidos']})
+#diccionario Lave : valor
+# creamos el término independiente $\beta_0$ agregando una columna de 'unos'
+# Definimos la variable de respuesta extrayéndola
+y = base3['Red_deman_oxig%']
+# Crear el DataFrame
+data = pd.DataFrame({'x': x, 'y': y})
+# Ajustar el modelo lineal
+modelito = smf.ols('y ~ x', data=data).fit()
+# Calcular los errores puros (diferencias entre valores observados y medios en niveles de x)
+data['y_pred'] = modelito.fittedvalues
+data['resid'] = data['y'] - data['y_pred']
+grouped = data.groupby('x')
+pure_error = np.sum([np.sum((group['y'] - group['y'].mean())**2) for name, group in grouped])
+pure_error_df = len(data) - len(grouped)
+# Calcular el error del modelo
+model_error = np.sum((data['y'] - data['y_pred'])**2)
+model_error_df = len(data) - len(modelito.params)
+# Calcular la suma de cuadrados de falta de ajuste
+lack_of_fit_ss = model_error - pure_error
+lack_of_fit_df = model_error_df - pure_error_df
+# Calcular la prueba F
+ms_lack_of_fit = lack_of_fit_ss / lack_of_fit_df
+ms_pure_error = pure_error / pure_error_df
+f_stat = ms_lack_of_fit / ms_pure_error
+p_value = f.sf(f_stat, lack_of_fit_df, pure_error_df)
+# Mostrar resultados
+resultaditos = pd.DataFrame({
+    'Source': ['Lack of fit', 'Pure Error'],
+    'DF': [lack_of_fit_df, pure_error_df],
+    'SS': [lack_of_fit_ss, pure_error],
+    'MS': [ms_lack_of_fit, ms_pure_error],
+    'F': [f_stat, np.nan],
+    'P-value': [p_value, np.nan]
+})
+print(resultaditos)
+
+base4 = base3.rename(columns={'Red_deman_oxig%': 'Red_deman_oxig'})
+import statsmodels.formula.api as smf
+
+
+
+tabla anova original
+modelote = smf.ols('Red_deman_oxig ~ Reduc_solidos', data=base4).fit()
+anova_tabla = sm.stats.anova_lm(modelote, typ=2)
+print(anova_tabla)
+
+
+
+from statsmodels.tsa.stattools import acf, pacf
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+
+
+
+# Asegúrate de que no haya valores NaN en la columna antes de graficar
+#serie = bd['diferencia_log_plastic'].dropna()
+serie= resultado.resid
+# Crear subplots para ACF y PACF
+fig, axes = plt.subplots(1, 1, figsize=(16, 6))
+# Gráfico de la ACF
+plot_acf(serie, lags=30, ax=axes)
+#axes[0].set_title('ACF de la primera diferencia del logaritmo de plastic')
+axes.set_title('ACF de los residuos del modelo OLS')
+plt.tight_layout()
+plt.show()
+
+
+o bien por una prueba de hipótesis Durbin Watson
+# Realiza la prueba de Durbin-Watson
+from statsmodels.stats.stattools import durbin_watson
+# Obtener los residuos del modelo
+#residuos = modelo.resid
+residuales = resultado.resid
+# Calcular el estadístico de Durbin-Watson
+dw_stat = durbin_watson(residuales)
+print(f'Estadístico de Durbin-Watson: {dw_stat:.4f}')
+# Interpretar el resultado
+if dw_stat < 1.5:
+    print("Posible autocorrelación positiva en los residuos.")
+elif dw_stat > 2.5:
+    print("Posible autocorrelación negativa en los residuos.")
+else:
+    print("No hay evidencia de autocorrelación en los residuos.")
+
+# Graficar los residuos para una visualización adicional
+plt.figure(figsize=(10, 6))
+plt.plot(residuales)
+plt.title('Residuos del Modelo de Regresión Lineal')
+plt.show()
+prueba Shapiro-Wilk de normalida
+residuales = resultado.resid
+# Shapiro-Wilk test
+# ==============================================================================
+shapiro_test = stats.shapiro(residuales)
+shapiro_test
+
+
+o la Anderson-Darling
+from scipy.stats import anderson
+# Prueba de Anderson-Darling
+resultado_ad = anderson(residuales, dist='norm')
+
+# Mostrar resultados
+print("Estadístico A:", resultado_ad.statistic)
+# valores criticos
+print("\nValores críticos:")
+for nivel, critico in zip(resultado_ad.significance_level, resultado_ad.critical_values):
+    print(f"Nivel de significancia {nivel}%: valor crítico = {critico}")
+
+
+residuos estudentizados y residuos estandarizados
+normalidad en residuos y datos atipicos
+# Crear instancia de influencia
+influence = resultado.get_influence()
+
+# Obtener residuos estandarizados (internos)
+residuos_estandarizados = influence.resid_studentized_internal
+
+# Obtener residuos studentizados (externos)
+residuos_studentizados = influence.resid_studentized_external
+
+# Mostrar ambos
+print("Residuos estandarizados:")
+print(residuos_estandarizados)
+
+print("\nResiduos studentizados:")
+print(residuos_studentizados)
+para VALORE DE INFLUENCIA
+influencia = resultado.get_influence()
+
+# Residuo studentizado
+residuo_i = influencia.resid_studentized_external[0]
+
+# Leverage
+leverage_i = influencia.hat_matrix_diag[0]
+
+# Cook's Distance
+cooks_i = influencia.cooks_distance[0][0]
+
+print(f"Observación 0:\nStudentizado: {residuo_i:.3f}, Leverage: {leverage_i:.3f}, Cook: {cooks_i:.3f}")
+
+
+
+
+
+Y GRAFICA PARA VALORES DE INFLUENCIA
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Obtener métricas de influencia
+influencia = resultado.get_influence()
+resid_student = influencia.resid_studentized_external
+leverage = influencia.hat_matrix_diag
+cooks_d = influencia.cooks_distance[0]  # devuelve tupla (valores, p-valores)
+
+# Crear el gráfico
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Scatter plot: leverage vs residuos studentizados
+scatter = ax.scatter(leverage, resid_student, 
+                     s=1000 * cooks_d,  # tamaño proporcional a Cook's D
+                     alpha=0.5, edgecolors='k')
+
+ax.axhline(y=0, color='gray', linestyle='--')
+ax.set_xlabel('Leverage')
+ax.set_ylabel('Residuos studentizados')
+ax.set_title('Gráfico de influencia (leverage vs residuos studentizados)')
+# Líneas de referencia (opcional)
+n = resultado.nobs
+p = resultado.df_model + 1  # incluye intercepto
+leverage_threshold = 2 * p / n
+ax.axvline(x=leverage_threshold, color='red', linestyle='--', label='2p/n (leverage alto)')
+ax.legend()
+plt.show()
+DETECTAR LOS CASOS MÁS INFLUEYENTES
+import pandas as pd
+
+# Obtenemos Cook's D
+cooks_d = influencia.cooks_distance[0]
+umbral_cook = 4 / len(cooks_d)
+
+# Crear un DataFrame con toda la info de diagnóstico
+diagnostico_df = pd.DataFrame({
+    'Índice': np.arange(len(cooks_d)),
+    'Cook\'s D': cooks_d,
+    'Leverage': influencia.hat_matrix_diag,
+    'Residuo Studentizado': influencia.resid_studentized_external,
+    'Residuo Estandarizado': influencia.resid_studentized_internal,
+    'y observado': resultado.model.endog,
+    'y ajustado': resultado.fittedvalues
+})
+
+# Filtrar los puntos más influyentes
+puntos_influyentes = diagnostico_df[diagnostico_df["Cook's D"] > umbral_cook]
+
+# Mostrar los puntos
+print("🔍 Puntos más influyentes (Cook's D > 4/n):")
+display(puntos_influyentes.sort_values(by="Cook's D", ascending=False))
+GRAFACIAS DE ESTUDENTIZADOS Y ESTANDARIZADOS RESIDUOS
+import matplotlib.pyplot as plt
+# Crear figura con dos subplots
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+# Residuos estandarizados
+axes[0].scatter(range(len(residuos_estandarizados)), residuos_estandarizados, color='blue', alpha=0.6)
+axes[0].axhline(y=0, color='gray', linestyle='--')
+axes[0].set_title('Residuos estandarizados (internos)')
+axes[0].set_xlabel('Índice de observación')
+axes[0].set_ylabel('Residuos')
+
+# Residuos studentizados
+axes[1].scatter(range(len(residuos_studentizados)), residuos_studentizados, color='green', alpha=0.6)
+axes[1].axhline(y=0, color='gray', linestyle='--')
+axes[1].set_title('Residuos studentizados (externos)')
+axes[1].set_xlabel('Índice de observación')
+axes[1].set_ylabel('Residuos')
+SÁBADO HABLAREMOS SOBRE TRNSAFORMACIÓN
+UNA DE ELLAS ES LA DE BOX-COX
+# Box-Cox
+
+from scipy.stats import boxcox
+
+# Aplicar la transformación Box-Cox
+ReDemanOxiQui = base3['Red_deman_oxig%']  # Reemplaza 'Reducción denmanda oxigeno químico' 
+                                      # con el nombre correcto de la columna si es diferente
+ReDemanOxiQui_boxcox, lambda_param = stats.boxcox(ReDemanOxiQui)
+
+# Mostrar el valor de lambda
+print(f'Lambda de la transformación Box-Cox: {lambda_param}')
+
+# Graficar la serie transformada
+plt.figure(figsize=(10, 6))
+plt.plot(ReDemanOxiQui_boxcox, label='Transformada Box-Cox')
+plt.title('Transformación - Box-Cox')
+plt.legend()
+plt.show()
+
+
+#boxcox(base3['Red_deman_oxig%'])
+#plt.figure(figsize=(15,6), dpi=100)
+#plt.plot(base3['Reduc_solidos'], hola, color='tab:yellow')
+#plt.xlabel('eje x')
+#plt.ylabel('eje y')
+#plt.title('Adios')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from statsmodels.stats.outliers_influence import variance_inflation_factor as VIF
+
+multiC = [VIF(X,i) for i in range (X.shape[1]-1)]  # valores relacionados
+
+#creo una nueva columna llamada '{vif}
+vif = pd.DataFrame({'vif':multiC}, index=X.columns[1:] )
+
+#impresión
+vif
+
+
+
+
+
+# Realizar la prueba de Durbin-Watson
+from statsmodels.stats.stattools import durbin_watson
+
+# Obtener los residuos del modelo
+residuos = modelo.resid
+
+# Calcular el estadístico de Durbin-Watson
+dw_stat = durbin_watson(residuos)
+print(f'Estadístico de Durbin-Watson: {dw_stat:.4f}')
+# Interpretar el resultado
+if dw_stat < 1.5:
+    print("Posible autocorrelación positiva en los residuos.")
+elif dw_stat > 2.5:
+    print("Posible autocorrelación negativa en los residuos.")
+else:
+    print("No hay evidencia de autocorrelación en los residuos.")
+
+# Graficar los residuos para una visualización adicional
+plt.figure(figsize=(10, 6))
+plt.plot(residuos)
+plt.title('Residuos del Modelo de Regresión Lineal')
+plt.show()
+
+
+
+
+
+
+# Iniciamos el proceso de la determinación del modelo de regresion lineal
+X = pd.DataFrame({'beta0' : np.ones(datos.shape[0]), 'beta1' : datos['velocidad _km_h'], 'beta2' : datos['velocidad _km_h']**2})
+#diccionario Lave : valor# x=datos['velocidad _km_h'], y=datos['dist_frenado']
+X
+
+
+
+
+
+
+import statsmodels.api as sm
+#  estimación y validación de regersión
+
+# Iniciamos el proceso de la determinación del modelo de regresion lineal
+X = pd.DataFrame({'beta0' : np.ones(datos.shape[0]), 'beta1' : datos['velocidad _km_h'], 'beta2' : datos['velocidad _km_h']**2})
+#diccionario Lave : valor# x=datos['velocidad _km_h'], y=datos['dist_frenado']
+
+# Definimos la variable de respuesta
+y = datos['dist_frenado']
+
+
+# opción para sustituir 'X'
+#x_c_intercepto = sm.add_constant(X)
+# Especificamos el modelo por usar
+modelo = sm.OLS(y, X)
+
+# Ajustamos el modelo
+resultado = modelo.fit()
+
+# Imprimimos los resultados
+print(resultado.summary())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Tabla de frecuencias
+
+base2=pd.DataFrame(base.sort_values(by='Dosis'))
+base2
+
+
+
+
+extracion de los niveles del tratamiento
+
+DOSIS=base2.Dosis.unique() 
+#DOSIS
+base7=pd.DataFrame(DOSIS)
+#columns_names = base7.columns.values
+#columns_names
+base7=base7.rename(columns={0:'Dosis'})
+base7
+
+
+creamos una tabla en donde se contabiliza los resultados
+
+tabla contingencia
+base4=pd.DataFrame(pd.crosstab(base2.Dosis, base2.status))
+base4
+
+
+
+calculamos la proporción de éxitos en n repeticiones Bernoulli y calculamos totales de cada nivel
+
+base4['total']=base4['muerto']+base4['vivo']
+base4['porc_muerte']=base4['muerto']/(base4['vivo']+base4['muerto'])
+base4
+
+
+
+
+
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import subplots
+# Desactivamos los warnings debido a las asginaciones de las listas
+pd.options.mode.chained_assignment = None  # default='warn'
+
+
+
+# Convertir la columna 'porc_muertes' a binaria
+base4['Y_binaria'] = np.where(base4['porc_muerte'] < .50, 0, 1)
+
+# Mostrar las primeras filas para verificar
+print(base4[['porc_muerte', 'Y_binaria']].head())
+
+
+
+
+
+base5 = base4.drop(columns= 'porc_muerte')
+base5
+
+
+
+
+
+import statsmodels.api as sm
+#from sklearn.linear_model import LogisticRegression
+# División de los datos en train y test
+# ==============================================================================
+XX = base5.drop(columns = 'Y_binaria')
+X = base7[['Dosis']]
+#X = base7.Dosis
+y2 = base5[['Y_binaria']]
+print(y2)
+
+
+
+
+
+# Añadir el término independiente (columna de 1s)
+Xx = sm.add_constant(X, prepend=True)
+print(Xx)
+
+
+
+
+
+import matplotlib.pyplot as plt
+
+# Graficar Y_binaria vs concentración
+plt.scatter(base7['Dosis'], base5['Y_binaria'], color='blue', label='Porc_muertes')
+
+# Añadir etiquetas y título
+plt.xlabel('Concentración de Nicotina')
+plt.ylabel('Y_binaria (Muertes)')
+plt.title('Y_binaria vs Concentración de Nicotina')
+
+# Mostrar la leyenda
+plt.legend()
+
+# Mostrar la gráfica
+plt.grid(True)
+plt.show()
+
+
+
+
+
+# correccion de la tabla
+
+base2 = pd.DataFrame(base.sort_values(by=base.columns[0]))
+base2
+
+
+
+
+import statsmodels.api as sm
+# Proporción de muertes
+base4['vivo'] = base4['total'] - base4['muerto']
+base4['porc_muerte'] = base4['muerto'] / base4['total']
+
+# Modelo de regresión logística
+X = sm.add_constant(base7['Dosis'])  # Agrega constante (intercepto)
+y = np.array(list(zip(base4['muerto'], base4['vivo'])))  # Datos binomiales
+
+model = sm.GLM(y, X, family=sm.families.Binomial())
+result = model.fit()
+
+print(result.summary())
+
+
+
+
+# Predicción
+x_pred = np.linspace(0, 1, 100)
+X_pred = sm.add_constant(x_pred)
+y_pred = result.predict(X_pred)
+
+# Gráfica
+plt.scatter(base7['Dosis'], base4['porc_muerte'], label='Datos reales')
+plt.plot(x_pred, y_pred, color='red', label='Regresión logística')
+plt.xlabel('Concentración')
+plt.ylabel('Proporción de muertes')
+plt.title('Regresión logística de mortalidad vs concentración')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+
+# Para statsmodels
+b0, b1 = result.params
+lc50 = -b0 / b1
+print("LC50 (statsmodels):", lc50)
+
+
+
+odds ratio
+# Para statsmodels
+b0, b1 = result.params
+lc50 = -b0 / b1
+print("LC50 (statsmodels):", lc50)
+
+
+
+
+beta1 = result.params[1]
+delta_x = 0.1
+odds_ratio_delta = np.exp(beta1 * delta_x)
+print(f"OR para un aumento de {delta_x}: {odds_ratio_delta:.3f}")
+
+
+
+•La empresa Simmons Stores va a realizar una promoción por correo. Simmons Stores es una cadena nacional de ropa para dama. Ha mandado imprimir 5000 costosos catálogos de venta a cuatro colores y en cada catálogo incluye un cupón de $50 de descuento en la compra de $200 o más. Como este catálogo es costoso, Simmons desea enviarlo sólo a aquellos clientes que tengan mayor probabilidad de usar el cupón. Los gerentes consideran que la cantidad gastada anualmente por el cliente en las tiendas Simmons, así como si posee o no una tarjeta de crédito de Simmons son dos variables que pueden servir para predecir  si ese cliente usará el cupón.
+Por ejemplo, supóngase que se desean comparar las posibilidades de que use el cupón un cliente que gasta $2000 anuales y tiene tarjeta de crédito de Simmons (x_1=2 y x_2=1) con las posibilidades de que use el cupón un cliente que gasta $2000 anuales y no tiene tarjeta de crédito de Simmons  (x_1=2 y x_2=0).
+Lo que interesa es interpretar el efecto que tiene un incremento de la variable independiente x2 en una unidad
+
+
+
+
+
+
+
+
+
+
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, accuracy_score, ConfusionMatrixDisplay
+
+
+
+
+# 1. Cargar datos
+df = pd.read_csv('Logit-Simmons.csv')
+df
+
+
+
+df = df.drop(columns='Customer')
+# 2. Separar variables predictoras (X) y la variable objetivo (y)
+# Ajusta los nombres de las columnas según tu archivo
+X = df.drop(columns='Purchase')  # Reemplaza 'target' con el nombre real de tu variable objetivo
+y = df['Purchase']               # Igual aquí
+
+# 3. Dividir en entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+
+
